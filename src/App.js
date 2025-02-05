@@ -9,6 +9,7 @@ function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<FormPage />} />
                 <Route path="/:uuid" element={<FormPage />} />
                 <Route path="/winners" element={<WinnersPage />} />
                 <Route path="/quiz/:uuid" element={<QuizPage />} />

@@ -13,8 +13,15 @@ function FormPage() {
     const [error, setError] = useState(null);
     
     useEffect(() => {
-        const storeSessionId = localStorage.getItem('sessionId');
-        const storedUserId = localStorage.getItem('userId');
+        let storeSessionId = localStorage.getItem('sessionId');
+        let storedUserId = localStorage.getItem('userId');
+
+        if (uuid != storeSessionId) {
+            localStorage.clear();
+            localStorage.setItem('sessionId', uuid);
+            storeSessionId = uuid;
+            storedUserId = undefined;
+        }
 
         if (storeSessionId && storedUserId) {
             navigate(`/quiz/${storeSessionId}`);
