@@ -13,6 +13,7 @@ function FormPage() {
     const [error, setError] = useState(null);
     
     useEffect(() => {
+        console.log(process.env.SERVER_URL);
         const storeSessionId = localStorage.getItem('sessionId');
         const storedUserId = localStorage.getItem('userId');
 
