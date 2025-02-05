@@ -3,7 +3,7 @@ import axios from 'axios';
 import './FormPage.css';
 import { useNavigate } from 'react-router-dom';
 
-const SERVER_URL = process.env.SERVER_URL;
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function FormPage() {
     const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ function FormPage() {
             }
 
             // You can replace the URL with your actual backend endpoint
-            await axios.post(SERVER_URL, { email, name, answer });
+            await axios.post(REACT_APP_SERVER_URL, { email, name, answer });
 
             setSubmitted(true);
             navigate('/winners');

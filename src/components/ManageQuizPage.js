@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const SOCKET_SERVER_URL = process.env.SERVER_URL;
+const SOCKET_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function ManageQuizPage() {
     const { quizId, sessionId } = useParams();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './WinnersPage.css';
 
-const SERVER_URL = process.env.SERVER_URL;
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const WinnersPage = () => {
     const [winners, setWinners] = useState([]);
@@ -10,7 +10,7 @@ const WinnersPage = () => {
 
     useEffect(() => {
         // Connect to the WebSocket server
-        const socket = io(SERVER_URL);
+        const socket = io(REACT_APP_SERVER_URL);
 
         // Listen for the initial winners list
         socket.on('winners', (winnersData) => {

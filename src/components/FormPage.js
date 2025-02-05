@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const SERVER_URL = process.env.SERVER_URL;
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function FormPage() {
     const { uuid } = useParams();
@@ -13,7 +13,6 @@ function FormPage() {
     const [error, setError] = useState(null);
     
     useEffect(() => {
-        console.log(process.env.SERVER_URL);
         const storeSessionId = localStorage.getItem('sessionId');
         const storedUserId = localStorage.getItem('userId');
 
@@ -33,7 +32,7 @@ function FormPage() {
 
         try {
             // Send both UUID and Name to join the quiz
-            const response = await axios.post(`${SERVER_URL}/join-quiz`, {
+            const response = await axios.post(`${REACT_APP_SERVER_URL}/join-quiz`, {
                 name,
                 sessionId,
             });

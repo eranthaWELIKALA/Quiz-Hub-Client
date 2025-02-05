@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const socket = io(process.env.SERVER_URL); // Connect to backend
+const socket = io(process.env.REACT_APP_SERVER_URL); // Connect to backend
 
 function QuizPage() {
+    console.log(process.env.REACT_APP_SERVER_URL);
     const { uuid } = useParams(); // Extract session ID from URL
     const navigate = useNavigate();
 
