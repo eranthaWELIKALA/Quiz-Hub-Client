@@ -61,7 +61,7 @@ function FormPage() {
 
     return (
         <div className="FormPage">
-            <h1>Join the Quiz</h1>
+            <h1 style={{textAlign: 'center'}}>Join the Quiz</h1>
             {!sessionId && <p>Please provide a quiz UUID.</p>}
             <div className="form-container">
                 {!sessionId ? (
@@ -86,13 +86,14 @@ function FormPage() {
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Your name"
                             required
+                            style={{marginLeft: '1rem'}}
                         />
                     </div>
                 )}
 
                 {error && <p className="error">{error}</p>}
 
-                <button onClick={handleJoinQuiz} disabled={loading}>
+                <button className='btn primary' style={{marginTop: '1rem', width: '100%'}} onClick={handleJoinQuiz} disabled={loading}>
                     {loading ? 'Joining...' : 'Join Quiz'}
                 </button>
             </div>

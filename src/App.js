@@ -4,6 +4,7 @@ import FormPage from './components/FormPage';
 import WinnersPage from './components/WinnersPage';
 import QuizPage from './components/QuizPage';
 import ManageQuizPage from './components/ManageQuizPage';
+import NotFoundPage from './components/NotFound';
 
 function App() {
     return (
@@ -11,10 +12,11 @@ function App() {
             <Routes>
                 <Route path="/" element={<FormPage />} />
                 <Route path="/:uuid" element={<FormPage />} />
-                <Route path="/winners" element={<WinnersPage />} />
+                <Route path="/winners/:uuid" element={<WinnersPage />} />
                 <Route path="/quiz/:uuid" element={<QuizPage />} />
                 <Route path="/manage-quiz/:quizId" element={<ManageQuizPage />} />
                 <Route path="/manage-quiz/:quizId/:sessionId" element={<ManageQuizPage />} />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
     );

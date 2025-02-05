@@ -12,3 +12,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.btn {
+  line-height: 2em;
+  text-align: center;
+  border-radius: 20px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.primary {
+  background: #800080;
+  color: #fff;
+}
+
+.secondary {
+  background: #000000;
+  color: #fff;
+}
+
+input {  
+  line-height: 2em;
+  border-radius: 5px;
+}

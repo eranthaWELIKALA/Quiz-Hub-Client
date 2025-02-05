@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import './WinnersPage.css';
 
@@ -23,33 +24,27 @@ const getRandomImage = () => {
 };
 
 const WinnersPage = () => {
+    const { uuid } = useParams(); // Extract session ID from URL
     const [winners, setWinners] = useState([]);
 
     useEffect(() => {
         // Connect to the WebSocket server
         const socket = io(REACT_APP_SERVER_URL);
 
+        if (uuid) {
+            socket.emit('retrieve-winners', { sessionId: uuid });
+        }
+
         // Listen for the initial winners list
         socket.on('winners', (winnersData) => {
-            const winnersWithImages = winnersData.map(winner => ({
-                ...winner,
-                image: getRandomImage()
-            }));
-            setWinners(winnersWithImages);
-        });
-
-        // Listen for new winner updates
-        socket.on('new-winner', (winnerData) => {
-            // const winnerWithImage = {
-            //     ...winnerData,
-            //     image: getRandomImage()
-            // };
-            
             setWinners((prevWinners) => {
-                return winnerData.map(winner => 
-                    winner.image = prevWinners.find(prevWinner => prevWinner.id == winner.id) || getRandomImage()
-                )
+                return winnersData.map(winner => {
+                    const prevWinner = prevWinners.find(prevWinner => prevWinner.id === winner.id);
+                    winner.image = prevWinner ? prevWinner.image : getRandomImage();
+                    return winner;
+                });
             });
+
         });
 
         // Clean up the socket connection on component unmount

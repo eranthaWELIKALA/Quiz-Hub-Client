@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import './ManageQuizPage.css';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -15,12 +16,12 @@ function ManageQuizPage() {
     const [correctAnswer, setCorrectAnswer] = useState(null);
     const [invalidQuiz, setInvalidQuiz] = useState(false);
     const [quizEnded, setQuizEnded] = useState(false);
-    
+
     const [questionVisible, setQuestionVisible] = useState(false);
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [answerRevealed, setAnswerRevealed] = useState(false);
     const [waiting, setWaiting] = useState(false);
-    
+
     const [timer, setTimer] = useState(0); // Countdown timer
 
     const startQuiz = () => {
@@ -109,26 +110,31 @@ function ManageQuizPage() {
     return (
         <div>
             <h1>Manage Quiz {quizId}</h1>
+            {sessionId && (<span style={{ fontFamily: "Arial, sans-serif", fontSize: "16px" }}><a>{window.location.origin + "/" + sessionId}</a><br /><br /></span>)}
             {!sessionId ? (
-                <button onClick={startQuiz}>Start Quiz</button>
+                <button className='btn primary' onClick={startQuiz}>Start Quiz</button>
             ) : (
                 <>
                     {!quizEnded && questionVisible && <h2>{question}</h2>}
                     {!quizEnded && timer > 0 && <h3>⏳ Time Left: {timer}s</h3>} {/* Display Timer */}
                     {!quizEnded && optionsVisible && (
-                        <ul>
+                        <ul className='options'>
                             {options.map((option, index) => (
-                                <li key={index}>{option}</li>
+                                <li
+                                    className={`op 
+                                    ${!quizEnded && answerRevealed && index === correctAnswer ? "correct" : ""}`
+                                    }
+                                    key={index}>{option}</li>
                             ))}
                         </ul>
                     )}
                     {invalidQuiz && <p>Invalid Quiz Id. Make sure you have created the quiz first...</p>}
                     {!quizEnded && waiting && <p>Waiting for correct answer to be revealed...</p>}
                     {quizEnded && <p>You reached the end of the quiz...</p>}
-                    {!quizEnded && answerRevealed && <h3>✅ Correct Answer: {correctAnswer}</h3>}
-                    {!quizEnded && <button onClick={nextQuestion}>Next Question</button>}
-                    {quizEnded && <button onClick={() => navigate('/manage-quiz/' + quizId)}>Start Another Quiz</button>}
-                    <button onClick={() => navigate('/winners')}>View Leaderboard</button>
+                    {!quizEnded && answerRevealed && <h3>✅ Correct Answer: {options[correctAnswer]}</h3>}
+                    {!quizEnded && <button className='btn primary' onClick={nextQuestion}>Next Question</button>}
+                    {quizEnded && <button className='btn primary' onClick={() => navigate('/manage-quiz/' + quizId)}>Start Another Quiz</button>}
+                    {sessionId && <button className='btn primary' onClick={() => navigate('/winners/' + sessionId)}>View Leaderboard</button>}
                 </>
             )}
         </div>
