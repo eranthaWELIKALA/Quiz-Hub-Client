@@ -12,7 +12,6 @@ This is the **React frontend** for **Quiz Hub**, a real-time multiplayer quiz ga
 ## 🛠️ Tech Stack  
 - **React** – UI framework  
 - **Socket.io Client** – For real-time communication  
-- **Tailwind CSS** (or your chosen styling framework) – For styling  
 - **React Router** – For navigation
 
 ## 🛠️ Configure Environment Variables
