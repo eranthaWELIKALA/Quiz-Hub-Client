@@ -1,3 +1,23 @@
+# 🎉 Quiz Hub – Frontend (React) 🎯  
+
+This is the **React frontend** for **Quiz Hub**, a real-time multiplayer quiz game. The frontend connects to the backend via **Socket.io**, allowing users to join quiz sessions, answer questions, and track the live leaderboard.  
+
+## 🚀 Features  
+- 🎨 **User-friendly UI** – Clean and responsive design.  
+- 🔌 **Real-time Communication** – Powered by Socket.io.  
+- ⏳ **Timed Questions** – Each question is displayed with a countdown.  
+- ⚡ **Speed-Based Scoring** – Faster answers earn more points.  
+- 📊 **Live Leaderboard** – Track scores dynamically.  
+
+## 🛠️ Tech Stack  
+- **React** – UI framework  
+- **Socket.io Client** – For real-time communication  
+- **Tailwind CSS** (or your chosen styling framework) – For styling  
+- **React Router** – For navigation
+
+## 🛠️ Configure Environment Variables
+REACT_APP_BACKEND_URL=http://localhost:5000
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
