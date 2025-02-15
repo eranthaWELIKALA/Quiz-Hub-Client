@@ -18,15 +18,17 @@
   --option-bg-hover-color: #b76e00;
   --correct-answer-bg-color: #28a745;
   --correct-answer-bg-hover-color: #1e7e34;
+
   user-select: none;
+
+  font-family: "Amatic SC, sans-serif";
 }
 
-body, #root {
+body,
+#root {
   background-color: var(--bg-color);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: Amatic SC, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

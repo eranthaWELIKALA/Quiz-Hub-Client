@@ -6,7 +6,7 @@ import styled from "styled-components";
 const SOCKET_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const Container = styled.div`
-    font-family: "Arial, sans-serif";
+    font-family: "Lato", sans-serif;
     text-align: center;
     background-color: var(--bg-color);
     padding: 20px;

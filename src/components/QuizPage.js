@@ -7,11 +7,12 @@ const socket = io(process.env.REACT_APP_SERVER_URL);
 
 // Styled Components
 const QuizContainer = styled.div`
+    font-family: Amatic SC, sans-serif;
     text-align: center;
-    font-family: "Lato", sans-serif;
 `;
 
 const QuestionContainer = styled.div`
+    font-family: "Lato", sans-serif;
     margin-top: 20px;
 `;
 

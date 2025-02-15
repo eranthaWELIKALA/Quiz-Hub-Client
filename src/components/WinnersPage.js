@@ -104,6 +104,7 @@ const WinnersPage = () => {
 
 // 🎨 Styled Components
 const Container = styled.div`
+    font-family: Amatic SC, sans-serif;
     max-width: 445px;
     height: 600px;
     background-color: black;
@@ -113,7 +114,6 @@ const Container = styled.div`
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 7px 9px 7px #00000052;
-    font-family: "Amatic SC";
 `;
 
 const TopLeadersList = styled.div`

@@ -15,7 +15,7 @@ const fadeIn = keyframes`
 `;
 
 const FormWrapper = styled.div`
-    font-family: Arial, sans-serif;
+    font-family: Amatic SC, sans-serif;
     text-align: center;
     margin-top: 50px;
     padding: 20px;
@@ -155,7 +155,10 @@ function FormPage() {
             );
 
             const { userId } = response.data;
-            localStorage.setItem("sessionId", response.data.sessionId || sessionId);
+            localStorage.setItem(
+                "sessionId",
+                response.data.sessionId || sessionId
+            );
             localStorage.setItem("userId", userId);
             navigate(`/quiz/${response.data.sessionId || sessionId}`);
         } catch (err) {
