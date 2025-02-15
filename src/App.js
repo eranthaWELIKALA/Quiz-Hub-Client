@@ -12,10 +12,17 @@ function App() {
             <Routes>
                 <Route path="/" element={<FormPage />} />
                 <Route path="/:uuid" element={<FormPage />} />
+
+                <Route path="/winners" element={<NotFoundPage />} />
                 <Route path="/winners/:uuid" element={<WinnersPage />} />
+
+                <Route path="/quiz" element={<NotFoundPage />} />
                 <Route path="/quiz/:uuid" element={<QuizPage />} />
+
+                <Route path="/manage-quiz" element={<NotFoundPage />} />
                 <Route path="/manage-quiz/:quizId" element={<ManageQuizPage />} />
                 <Route path="/manage-quiz/:quizId/:sessionId" element={<ManageQuizPage />} />
+
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>

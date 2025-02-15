@@ -1,5 +1,28 @@
-body {
-  background-color: rgb(159, 240, 226);
+@import url('//fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap');
+
+:root {
+  --bg-color: #b394c9;
+  --primary-color: #800080;
+  --primary-hover: #dd10dd;
+  --secondary-color: #000000;
+  --secondary-hover: #737e74;
+  --primary-text-color: #fff;
+  --secondary-text-color: #000000;
+  --error-color: red;
+  --disabled-color: #f0f0f0;
+  --background-light: #f9f9f9;
+  --border-radius: 8px;
+  --option-bg-color: #d90;
+  --option-bg-hover-color: #b76e00;
+  --correct-answer-bg-color: #28a745;
+  --correct-answer-bg-hover-color: #1e7e34;
+  user-select: none;
+}
+
+body, #root {
+  background-color: var(--bg-color);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -31,7 +54,7 @@ code {
   color: #fff;
 }
 
-input {  
+input {
   line-height: 2em;
   border-radius: 5px;
 }

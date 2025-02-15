@@ -1,36 +1,147 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const FormWrapper = styled.div`
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+`;
+
+const Heading = styled.h1`
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+`;
+
+const Paragraph = styled.p`
+    font-size: 1.1rem;
+    color: #555;
+`;
+
+const FormContainer = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+`;
+
+const FormGroup = styled.div`
+    margin-bottom: 20px;
+    text-align: left;
+`;
+
+const Label = styled.label`
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+`;
+
+const Input = styled.input`
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease-in-out;
+
+    &:focus {
+        outline: none;
+        border-color: var(--primary-hover);
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    }
+
+    &:disabled {
+        background-color: var(--disabled-color);
+        cursor: not-allowed;
+    }
+`;
+
+const Button = styled.button`
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+
+    &:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+        background-color: var(--primary-hover);
+        transform: scale(1.05);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px var(--primary-hover);
+    }
+`;
+
+const ErrorText = styled.p`
+    color: red;
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    animation: ${fadeIn} 0.3s ease-in-out;
+`;
 
 function FormPage() {
     const { uuid } = useParams();
     const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [sessionId, setSessionId] = useState(uuid || '');
+    const [name, setName] = useState("");
+    const [sessionId, setSessionId] = useState(uuid || "");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
     useEffect(() => {
-        let storeSessionId = localStorage.getItem('sessionId');
-        let storedUserId = localStorage.getItem('userId');
+        if (uuid) {
+            const storedSessionId = localStorage.getItem("sessionId");
+            const storedUserId = localStorage.getItem("userId");
 
-        if (uuid != storeSessionId) {
-            localStorage.clear();
-            localStorage.setItem('sessionId', uuid);
-            storeSessionId = uuid;
-            storedUserId = undefined;
-        }
+            if (uuid !== storedSessionId) {
+                localStorage.clear();
+                localStorage.setItem("sessionId", uuid);
+            }
 
-        if (storeSessionId && storedUserId) {
-            navigate(`/quiz/${storeSessionId}`);
+            if (storedSessionId && storedUserId) {
+                navigate(`/quiz/${storedSessionId}`);
+            }
         }
-    }, [navigate]);
+    }, [uuid, navigate]);
 
     const handleJoinQuiz = async () => {
         if (!sessionId.trim() || !name.trim()) {
-            setError('Both Session Id and Name are required.');
+            setError("Both Session Id/Code and Name are required.");
             return;
         }
 
@@ -38,66 +149,61 @@ function FormPage() {
         setError(null);
 
         try {
-            // Send both UUID and Name to join the quiz
-            const response = await axios.post(`${REACT_APP_SERVER_URL}/join-quiz`, {
-                name,
-                sessionId,
-            });
+            const response = await axios.post(
+                `${REACT_APP_SERVER_URL}/join-quiz`,
+                { name, sessionId }
+            );
 
             const { userId } = response.data;
-
-            // Store session details in localStorage
-            localStorage.setItem('sessionId', sessionId);
-            localStorage.setItem('userId', userId);
-
-            // Navigate to the quiz page
-            navigate(`/quiz/${sessionId}`);
+            localStorage.setItem("sessionId", response.data.sessionId || sessionId);
+            localStorage.setItem("userId", userId);
+            navigate(`/quiz/${response.data.sessionId || sessionId}`);
         } catch (err) {
-            setError(err.response?.data?.error || 'Error joining quiz.');
+            setError(err.response?.data?.error || "Error joining quiz.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="FormPage">
-            <h1 style={{textAlign: 'center'}}>Join the Quiz</h1>
-            {!sessionId && <p>Please provide a quiz UUID.</p>}
-            <div className="form-container">
-                {!sessionId ? (
-                    <div className="form-group">
-                        <label htmlFor="sessionId">Enter Quiz UUID</label>
-                        <input
+        <FormWrapper>
+            <Heading>Join the Quiz</Heading>
+            {!uuid && (
+                <Paragraph>Please provide a quiz UUID or Code.</Paragraph>
+            )}
+            <FormContainer>
+                {!uuid ? (
+                    <FormGroup>
+                        <Input
                             type="text"
                             id="sessionId"
                             value={sessionId}
                             onChange={(e) => setSessionId(e.target.value)}
-                            placeholder="Your quiz UUID"
+                            placeholder="Your quiz UUID or Code"
                             required
                         />
-                    </div>
+                    </FormGroup>
                 ) : (
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
-                        <input
+                    <FormGroup>
+                        <Label htmlFor="name">Name</Label>
+                        <Input
                             type="text"
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Your name"
                             required
-                            style={{marginLeft: '1rem'}}
                         />
-                    </div>
+                    </FormGroup>
                 )}
 
-                {error && <p className="error">{error}</p>}
+                {error && <ErrorText>{error}</ErrorText>}
 
-                <button className='btn primary' style={{marginTop: '1rem', width: '100%'}} onClick={handleJoinQuiz} disabled={loading}>
-                    {loading ? 'Joining...' : 'Join Quiz'}
-                </button>
-            </div>
-        </div>
+                <Button onClick={handleJoinQuiz} disabled={loading}>
+                    {loading ? "Joining..." : "Join Quiz"}
+                </Button>
+            </FormContainer>
+        </FormWrapper>
     );
 }
 

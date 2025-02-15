@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import io from 'socket.io-client';
-import './WinnersPage.css';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import io from "socket.io-client";
+import styled from "styled-components";
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const imageList = [
-    '/images/clown-fish.png',
-    '/images/elephant.png',
-    '/images/hippo.png',
-    '/images/ladybug.png',
-    '/images/lion.png.png',
-    '/images/mouse.png',
-    '/images/owl.png',
-    '/images/pig.png',
-    '/images/rabbit.png',
-    '/images/sheep.png',
+    "/images/clown-fish.png",
+    "/images/elephant.png",
+    "/images/hippo.png",
+    "/images/ladybug.png",
+    "/images/lion.png",
+    "/images/mouse.png",
+    "/images/owl.png",
+    "/images/pig.png",
+    "/images/rabbit.png",
+    "/images/sheep.png",
 ];
 
 const getRandomImage = () => {
@@ -24,93 +24,213 @@ const getRandomImage = () => {
 };
 
 const WinnersPage = () => {
-    const { uuid } = useParams(); // Extract session ID from URL
+    const { uuid } = useParams();
     const [winners, setWinners] = useState([]);
 
     useEffect(() => {
-        // Connect to the WebSocket server
         const socket = io(REACT_APP_SERVER_URL);
 
         if (uuid) {
-            socket.emit('retrieve-winners', { sessionId: uuid });
+            socket.emit("retrieve-winners", { sessionId: uuid });
         }
 
-        // Listen for the initial winners list
-        socket.on('winners', (winnersData) => {
-            setWinners((prevWinners) => {
-                return winnersData.map(winner => {
-                    const prevWinner = prevWinners.find(prevWinner => prevWinner.id === winner.id);
-                    winner.image = prevWinner ? prevWinner.image : getRandomImage();
+        socket.on("winners", (winnersData) => {
+            setWinners((prevWinners) =>
+                winnersData.map((winner) => {
+                    const prevWinner = prevWinners.find(
+                        (prevWinner) => prevWinner.id === winner.id
+                    );
+                    winner.image = prevWinner
+                        ? prevWinner.image
+                        : getRandomImage();
                     return winner;
-                });
-            });
-
+                })
+            );
         });
 
-        // Clean up the socket connection on component unmount
         return () => {
             socket.disconnect();
         };
-    }, []);
+    }, [uuid]);
 
     return (
-        <div className="container">
-            <div className="topLeadersList">
-                {winners.slice(0, 3).map((winner) => (
-                    <div className="winner" key={winner.id}>
-                        <div className="containerImage">
-                            <img className="image" loading="lazy" src={winner.image} />
-                            <div className="crown">
-                                <svg
-                                    id="crown1"
-                                    fill="#0f74b5"
-                                    data-name="Layer 1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 100 50"
-                                >
-                                    <polygon
-                                        className="cls-1"
-                                        points="12.7 50 87.5 50 100 0 75 25 50 0 25.6 25 0 0 12.7 50"
-                                    />
-                                </svg>
-                            </div>
-                            <div className="leaderName">{winner.name}</div>
-                        </div>
-                    </div>
+        <Container>
+            <TopLeadersList>
+                {winners.slice(0, 3).map((winner, index) => (
+                    <Winner key={winner.id} index={index}>
+                        <ContainerImage>
+                            <WinnerImage
+                                src={winner.image}
+                                alt={winner.name}
+                                loading="lazy"
+                            />
+                            <Crown index={index} />
+                            <LeaderName>{winner.name}</LeaderName>
+                        </ContainerImage>
+                    </Winner>
                 ))}
-            </div>
+            </TopLeadersList>
 
-            <div className="playerslist">
-                <div className="table">
+            <PlayersList>
+                <Table>
                     <div>#</div>
-
                     <div>Name</div>
+                    <div>Score</div>
+                </Table>
 
-                    <div>
-                        Score
-                    </div>
-
-                </div>
                 {winners.length === 0 ? (
-                    <p>No winners yet</p> // Message if no winners exist
+                    <NoWinners>No winners yet</NoWinners>
                 ) : (
-                    <div className="list">
+                    <List>
                         {winners.map((winner, index) => (
-                            <div className="player" key={winner.id}>
-                                <span> {index + 1}</span>
-                                <div className="user">
-                                    <img className="image" src={winner.image} />
-                                    <span> {winner.name} </span>
-                                </div>
-                                <span> {winner.score} </span>
-                            </div>
+                            <Player key={winner.id} index={index}>
+                                <span>{index + 1}</span>
+                                <User>
+                                    <WinnerImageSmall
+                                        src={winner.image}
+                                        alt={winner.name}
+                                    />
+                                    <span>{winner.name}</span>
+                                </User>
+                                <span>{winner.score}</span>
+                            </Player>
                         ))}
-                    </div>
+                    </List>
                 )}
-            </div>
-        </div>
+            </PlayersList>
+        </Container>
     );
 };
 
+// 🎨 Styled Components
+const Container = styled.div`
+    max-width: 445px;
+    height: 600px;
+    background-color: black;
+    margin: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 7px 9px 7px #00000052;
+    font-family: "Amatic SC";
+`;
+
+const TopLeadersList = styled.div`
+    display: flex;
+    position: relative;
+    min-height: 120px;
+    padding-top: 3rem;
+`;
+
+const Winner = styled.div`
+    color: black;
+    position: absolute;
+    left: ${({ index }) => (index === 1 ? "15%" : index === 2 ? "85%" : "50%")};
+    transform: translateX(
+        ${({ index }) => (index === 1 ? "-15%" : index === 2 ? "-85%" : "-50%")}
+    );
+    bottom: ${({ index }) => (index === 0 ? "0" : "-20%")};
+`;
+
+const ContainerImage = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const WinnerImage = styled.img`
+    width: ${({ index }) => (index === 0 ? "130px" : "110px")};
+    height: ${({ index }) => (index === 0 ? "130px" : "110px")};
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #b159ffcc;
+`;
+
+const WinnerImageSmall = styled.img`
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid white;
+`;
+
+const Crown = styled.div`
+    position: absolute;
+    top: ${({ index }) => (index === 0 ? "-20%" : "-25%")};
+    left: 50%;
+    transform: translateX(-50%);
+
+    &::after {
+        content: "${({ index }) => index + 1}";
+        width: 30px;
+        height: 30px;
+        background: ${({ index }) =>
+            index === 0 ? "#ffc500" : index === 1 ? "#d4d4d4" : "#ab6528"};
+        border-radius: 50%;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        line-height: 30px;
+        font-weight: 700;
+        box-shadow: 1px 1px 4px black;
+    }
+`;
+
+const LeaderName = styled.div`
+    position: absolute;
+    text-align: center;
+    color: white;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+`;
+
+const PlayersList = styled.div`
+    margin-top: 6rem;
+    font-size: 16px;
+    overflow: hidden;
+    color: white;
+    font-family: "Roboto Condensed", sans-serif;
+`;
+
+const Table = styled.div`
+    display: grid;
+    font-size: 14px;
+    grid-template-columns: 0.4fr 6fr 3.6fr;
+    text-align: center;
+
+    div:nth-child(2) {
+        text-align: left;
+        margin-left: 5px;
+    }
+`;
+
+const List = styled.div`
+    overflow-y: scroll;
+    height: 20rem;
+    overflow-x: hidden;
+`;
+
+const Player = styled.div`
+    background-color: ${({ index }) =>
+        index % 2 === 0 ? "#b159ffcc" : "#330b7775"};
+    display: grid;
+    grid-template-columns: 0.4fr 6fr 3.6fr;
+    align-items: center;
+    min-height: 42px;
+    text-align: center;
+    padding-right: 0.4rem;
+`;
+
+const User = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+`;
+
+const NoWinners = styled.p`
+    text-align: center;
+    color: white;
+`;
 
 export default WinnersPage;
